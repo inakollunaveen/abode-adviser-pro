@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Search, User, Settings } from "lucide-react";
+import { Menu, X, Home, Search, User, Settings, LogOut } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-glass backdrop-blur-md border-b border-glass">
@@ -19,19 +23,41 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="/" className="text-foreground hover:text-primary transition-colors">
+            <button 
+              onClick={() => navigate("/")}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Home
-            </a>
-            <a href="/search" className="text-foreground hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => navigate("/search")}
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Search
-            </a>
-            <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">
-              Dashboard
-            </a>
-            <Button variant="outline" size="sm">
-              <User className="w-4 h-4 mr-2" />
-              Login
-            </Button>
+            </button>
+            
+            {isAuthenticated ? (
+              <>
+                <button 
+                  onClick={() => navigate(user?.role === 'owner' ? '/owner-dashboard' : user?.role === 'admin' ? '/admin-dashboard' : '/user-dashboard')}
+                  className="text-foreground hover:text-primary transition-colors"
+                >
+                  Dashboard
+                </button>
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-muted-foreground">Hi, {user?.name}</span>
+                  <Button variant="outline" size="sm" onClick={logout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => navigate("/auth")}>
+                <User className="w-4 h-4 mr-2" />
+                Login
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -50,19 +76,41 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden bg-card/95 backdrop-blur-sm border border-border rounded-lg mt-2 mb-4 p-4">
             <div className="flex flex-col space-y-4">
-              <a href="/" className="text-foreground hover:text-primary transition-colors">
+              <button 
+                onClick={() => navigate("/")}
+                className="text-foreground hover:text-primary transition-colors text-left"
+              >
                 Home
-              </a>
-              <a href="/search" className="text-foreground hover:text-primary transition-colors">
+              </button>
+              <button 
+                onClick={() => navigate("/search")}
+                className="text-foreground hover:text-primary transition-colors text-left"
+              >
                 Search
-              </a>
-              <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">
-                Dashboard
-              </a>
-              <Button variant="outline" size="sm" className="w-fit">
-                <User className="w-4 h-4 mr-2" />
-                Login
-              </Button>
+              </button>
+              
+              {isAuthenticated ? (
+                <>
+                  <button 
+                    onClick={() => navigate(user?.role === 'owner' ? '/owner-dashboard' : user?.role === 'admin' ? '/admin-dashboard' : '/user-dashboard')}
+                    className="text-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Dashboard
+                  </button>
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-sm text-muted-foreground mb-2">Hi, {user?.name}</p>
+                    <Button variant="outline" size="sm" className="w-fit" onClick={logout}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <Button variant="outline" size="sm" className="w-fit" onClick={() => navigate("/auth")}>
+                  <User className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+              )}
             </div>
           </div>
         )}

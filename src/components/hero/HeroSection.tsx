@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,10 +9,15 @@ const HeroSection = () => {
   const [location, setLocation] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [propertyType, setPropertyType] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = () => {
-    // Navigate to search page with filters
-    console.log("Searching with:", { location, priceRange, propertyType });
+    const params = new URLSearchParams();
+    if (location) params.set('location', location);
+    if (priceRange) params.set('price', priceRange);
+    if (propertyType) params.set('type', propertyType);
+    
+    navigate(`/search?${params.toString()}`);
   };
 
   return (
