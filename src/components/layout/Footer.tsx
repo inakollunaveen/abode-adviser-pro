@@ -1,4 +1,5 @@
 import { Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -23,19 +24,19 @@ const Footer = () => {
             <h3 className="text-foreground font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/search" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/search" className="text-muted-foreground hover:text-primary transition-colors">
                   Search
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/dashboard" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/dashboard" className="text-muted-foreground hover:text-primary transition-colors">
                   Dashboard
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -45,19 +46,19 @@ const Footer = () => {
             <h3 className="text-foreground font-semibold mb-4">Support</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/help-center" className="text-muted-foreground hover:text-primary transition-colors">
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/contact-us" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

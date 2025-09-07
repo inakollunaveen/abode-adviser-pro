@@ -12,6 +12,10 @@ import ListingDetail from "./pages/ListingDetail";
 import UserDashboard from "./pages/UserDashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Dashboard from "./pages/Dashboard";
+import HelpCenter from "./pages/HelpCenter";
+import ContactUs from "./pages/ContactUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +32,10 @@ const App = () => (
             <Route path="/search" element={<Search />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/listing/:id" element={<ListingDetail />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route 
               path="/user-dashboard" 
               element={

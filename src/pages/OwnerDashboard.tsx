@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Home, Plus, Edit, Trash2, Eye, MapPin, IndianRupee } from 'lucide-react';
+import { Home, Plus, Edit, Trash2, Eye, MapPin, IndianRupee, Upload, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 // Mock listings data
@@ -53,8 +53,10 @@ const OwnerDashboard = () => {
     area: '',
     occupancy: '',
     furnishing: '',
-    amenities: ''
+    amenities: '',
+    photos: [] as File[]
   });
+  const [photoPreview, setPhotoPreview] = useState<string[]>([]);
 
   const handleAddListing = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,8 +85,10 @@ const OwnerDashboard = () => {
       area: '',
       occupancy: '',
       furnishing: '',
-      amenities: ''
+      amenities: '',
+      photos: []
     });
+    setPhotoPreview([]);
     
     toast({
       title: "Listing added",
@@ -98,6 +102,25 @@ const OwnerDashboard = () => {
       title: "Listing deleted",
       description: "Property listing has been removed.",
     });
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      const newPhotos = [...newListing.photos, ...files].slice(0, 5); // Limit to 5 photos
+      setNewListing(prev => ({ ...prev, photos: newPhotos }));
+      
+      // Create preview URLs
+      const newPreviews = files.map(file => URL.createObjectURL(file));
+      setPhotoPreview(prev => [...prev, ...newPreviews].slice(0, 5));
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    const newPhotos = newListing.photos.filter((_, i) => i !== index);
+    const newPreviews = photoPreview.filter((_, i) => i !== index);
+    setNewListing(prev => ({ ...prev, photos: newPhotos }));
+    setPhotoPreview(newPreviews);
   };
 
   const getStatusBadge = (status: string) => {
@@ -409,6 +432,52 @@ const OwnerDashboard = () => {
                         value={newListing.amenities}
                         onChange={(e) => setNewListing(prev => ({ ...prev, amenities: e.target.value }))}
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="photos">Property Photos (Max 5)</Label>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-center w-full">
+                          <label htmlFor="photos" className="flex flex-col items-center justify-center w-full h-32 border-2 border-border border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted/80 transition-colors">
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                              <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                              <p className="mb-2 text-sm text-muted-foreground">
+                                <span className="font-semibold">Click to upload</span> property photos
+                              </p>
+                              <p className="text-xs text-muted-foreground">PNG, JPG or JPEG (MAX. 5 photos)</p>
+                            </div>
+                            <input
+                              id="photos"
+                              type="file"
+                              className="hidden"
+                              multiple
+                              accept="image/*"
+                              onChange={handlePhotoUpload}
+                            />
+                          </label>
+                        </div>
+                        
+                        {photoPreview.length > 0 && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {photoPreview.map((preview, index) => (
+                              <div key={index} className="relative group">
+                                <img
+                                  src={preview}
+                                  alt={`Property photo ${index + 1}`}
+                                  className="w-full h-24 object-cover rounded-lg border border-border"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removePhoto(index)}
+                                  className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     
                     <Button type="submit" className="bg-gradient-primary">
